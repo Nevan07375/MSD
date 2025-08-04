@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flipkarts - Login & Products</title>
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  body, html {
+    margin: 0;
+    background: #f0f2f5;
+    color: #333;
+    min-height: 100vh;
+  }
+  .hidden {
+    display: none;
+  }
+  /* LOGIN PAGE */
+  .login-container {
+    display: flex;
+    height: 100vh;
+    max-width: 900px;
+    margin: 0 auto;
+    box-shadow: 0 0 30px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+  }
+  .login-left {
+    flex: 1.3;
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80') center center/cover no-repeat;
+    position: relative;
+    color: white;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .login-left::before {
+    content: "";
+    position: absolute;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,50,0.55);
+    z-index: 0;
+  }
+  .login-left > * {
+    position: relative;
+    z-index: 1;
+  }
+  .login-left h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-weight: 900;
+    text-shadow: 0 3px 8px rgba(0,0,0,0.7);
+  }
+  .login-left p {
+    font-size: 1.1rem;
+    max-width: 300px;
+    line-height: 1.4;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+  }
+  .login-form {
+    margin-top: 40px;
+    background: white;
+    padding: 25px 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    color: #333;
+  }
+  .login-form input[type="email"],
+  .login-form input[type="password"] {
+    width: 100%;
+    padding: 14px 15px;
+    margin: 12px 0 20px;
+    border: 1.6px solid #ddd;
+    border-radius: 7px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  .login-form input[type="email"]:focus,
+  .login-form input[type="password"]:focus {
+    border-color: #2874f0;
+    outline: none;
+  }
+  .login-form button {
+    width: 100%;
+    background: #2874f0;
+    color: white;
+    padding: 14px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .login-form button:hover {
+    background: #185abc;
+  }
+  #login-error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: -12px;
+    margin-bottom: 12px;
+  }
+  .login-right {
+    flex: 1;
+    background: #2874f0;
+    color: white;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .login-right h2 {
+    margin-top: 0;
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #ffd814;
+    padding-bottom: 10px;
+  }
+  .info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    cursor: default;
+  }
+  .info-item img {
+    width: 40px;
+    height: 40px;
+    margin-right: 18px;
+    filter: drop-shadow(0 0 2px rgba(0,0,0,0.2));
+  }
+  .info-item span {
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+  .login-right small {
+    margin-top: auto;
+    font-size: 0.85rem;
+    opacity: 0.8;
+  }
+  /* PRODUCTS PAGE */
+  #products-page {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px 40px;
+  }
+  #products-page h1 {
+    text-align: center;
+    color: #2874f0;
+    font-weight: 900;
+    margin-bottom: 30px;
+  }
+  .category {
+    margin-bottom: 40px;
+  }
+  .category h2 {
+    color: #444;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #2874f0;
+    padding-bottom: 5px;
+  }
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(210px,1fr));
+    gap: 20px;
+  }
+  .product-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .product-card img {
+    max-width: 100%;
+    max-height: 140px;
+    object-fit: contain;
+    margin-bottom: 10px;
+  }
+  .product-card h3 {
+    font-size: 1.1rem;
+    margin: 6px 0 4px;
+    text-align: center;
+  }
+  .actions {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: auto;
+  }
+  .actions label {
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .actions input[type="checkbox"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+  }
+  @media (max-width: 750px) {
+    .login-container {
+      flex-direction: column;
+      max-width: 100%;
+      height: auto;
+      border-radius: 0;
+    }
+    .login-left, .login-right {
+      flex: none;
+      height: auto;
+      padding: 30px 20px;
+    }
+    .login-left {
+      order: 2;
+      background-position: center top;
+    }
+    .login-right {
+      order: 1;
+    }
+    .products-grid {
+      grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div class="login-container" id="login-page" role="main" aria-label="Login Page">
+
+  <div class="login-left">
+    <h1>Welcome to Flipkarts</h1>
+    <p>Your one-stop shop for Western Wear, Traditional Dresses, Electronics, Smartphones, Kitchen Items and more.</p>
+
+    <form class="login-form" id="login-form" novalidate aria-label="Login form">
+      <input type="email" id="email" placeholder="Email address" aria-required="true" required />
+      <input type="password" id="password" placeholder="Password" aria-required="true" required minlength="6" />
+      <div id="login-error" role="alert" aria-live="assertive"></div>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <aside class="login-right" aria-label="Information and Support">
+    <h2>Need Help?</h2>
+
+    <div class="info-item" tabindex="0" aria-describedby="about-desc">
+      <img src="https://img.icons8.com/ios-filled/50/ffd814/info.png" alt="About icon" />
+      <span>About Us</span>
+    </div>
+    <div class="info-item" tabindex="0" aria-describedby="support-desc">
+      <img src="https://img.icons8.com/ios-filled/50/ffd814/customer-support.png" alt="Support icon" />
+      <span>Support</span>
+    </div>
+    <div class="info-item" tabindex="0" aria-describedby="contact-desc">
+      <img src="https://img.icons8.com/ios-filled/50/ffd814/phone.png" alt="Contact icon" />
+      <span>Contact Us</span>
+    </div>
+    <div class="info-item" tabindex="0" aria-describedby="help-desc">
+      <img src="https://img.icons8.com/ios-filled/50/ffd814/help.png" alt="Help icon" />
+      <span>Help</span>
+    </div>
+
+    <small>&copy; 2025 Flipkarts Pvt Ltd.</small>
+  </aside>
+</div>
+
+<!-- PRODUCTS PAGE -->
+<div id="products-page" class="hidden" role="main" aria-label="Products Page">
+  <h1>Products</h1>
+  <div id="products-container" aria-live="polite"></div>
+</div>
+
+<script>
+  // Product data with reliable Unsplash images
+  const productsData = {
+    "Western Wear": [
+      
+      { id: 2, name: "Women's Denim Jacket", price: 1299, img: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&q=80" }
+    ],
+   
+    "Mobiles": [
+      { id: 5, name: "Smartphone Model X", price: 19999, img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80" },
+      { id: 6, name: "Smartphone Model Y", price: 25999, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" }
+    ],
+    "Electronics": [
+      { id: 7, name: "Bluetooth Headphones", price: 2999, img: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=400&q=80" },
+  ],
+    "Kitchen Items": [
+      { id: 9, name: "Mixer Grinder", price: 3499, img: "https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=400&q=80" },
+      { id: 10, name: "Non-stick Cookware Set", price: 4999, img: "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=400&q=80" }
+    ]
+  };
+
+  // DOM Elements
+  const loginForm = document.getElementById('login-form');
+  const loginPage = document.getElementById('login-page');
+  const productsPage = document.getElementById('products-page');
+  const loginError = document.getElementById('login-error');
+  const productsContainer = document.getElementById('products-container');
+
+  // Handle login submission
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if (!email.includes('@') || password.length < 6) {
+      loginError.textContent = "Please enter a valid email and password (min 6 characters).";
+      return;
+    }
+
+    loginError.textContent = "";
+
+    // Hide login, show products
+    loginPage.classList.add('hidden');
+    productsPage.classList.remove('hidden');
+
+    renderProducts();
+  });
+
+  // Render products grouped by category, WITHOUT showing prices initially
+  function renderProducts() {
+    productsContainer.innerHTML = '';
+
+    for (const category in productsData) {
+      const section = document.createElement('section');
+      section.className = 'category';
+
+      const heading = document.createElement('h2');
+      heading.textContent = category;
+      section.appendChild(heading);
+
+      const grid = document.createElement('div');
+      grid.className = 'products-grid';
+
+      productsData[category].forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+
+        const img = document.createElement('img');
+        img.src = product.img;
+        img.alt = product.name;
+        img.loading = 'lazy';
+        card.appendChild(img);
+
+        const name = document.createElement('h3');
+        name.textContent = product.name;
+        card.appendChild(name);
+
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+
+        // Add to Cart checkbox
+        const addCartLabel = document.createElement('label');
+        addCartLabel.title = "Add to Cart";
+        const addCartCheckbox = document.createElement('input');
+        addCartCheckbox.type = 'checkbox';
+        addCartCheckbox.name = 'add-to-cart';
+        addCartCheckbox.value = product.id;
+        addCartLabel.appendChild(addCartCheckbox);
+        addCartLabel.appendChild(document.createTextNode('Add to Cart'));
+        actions.appendChild(addCartLabel);
+
+        // Buy Now checkbox
+        const buyNowLabel = document.createElement('label');
+        buyNowLabel.title = "Buy Now";
+        const buyNowCheckbox = document.createElement('input');
+        buyNowCheckbox.type = 'checkbox';
+        buyNowCheckbox.name = 'buy-now';
+        buyNowCheckbox.value = product.id;
+
+        buyNowCheckbox.addEventListener('change', function() {
+          if (this.checked) {
+            alert(`You chose to Buy Now: "${product.name}" costing ₹${product.price.toLocaleString()}`);
+            this.checked = false; // Reset checkbox for re-use
+          }
+        });
+
+        buyNowLabel.appendChild(buyNowCheckbox);
+        buyNowLabel.appendChild(document.createTextNode('Buy Now'));
+        actions.appendChild(buyNowLabel);
+
+        card.appendChild(actions);
+        grid.appendChild(card);
+      });
+
+      section.appendChild(grid);
+      productsContainer.appendChild(section);
+    }
+  }
+</script>
+
+</body>
+</html>
